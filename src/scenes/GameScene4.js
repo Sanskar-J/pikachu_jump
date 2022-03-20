@@ -1,21 +1,20 @@
 import Phaser from "phaser";
-// import GameScene2 from "./GameScene2";
-import ScoreLabel from "../ui/ScoreLabel";
 import HighScore from "../ui/HighScore";
 
+import ScoreLabel from "../ui/ScoreLabel";
 import BombSpawner from "./BombSpawner";
 
 const GROUND_KEY='ground';
 const PLAYER_KEY='dude';
 const STAR_KEY = 'star';
 const BOMB_KEY = 'bomb';
-var count=0;
-var levChange= 80;
 const AllScenes=['game-scene','game-scene2','game-scene3','game-scene4']
+var levChange;
+var count=0;
 
-export default class GameScene extends Phaser.Scene{
+export default class GameScene4 extends Phaser.Scene{
     constructor(){
-        super('game-scene')
+        super('game-scene4')
         this.gameOver=false
     }
     init(data){
@@ -35,9 +34,7 @@ export default class GameScene extends Phaser.Scene{
         this.add.image(400, 300, 'sky')
     	// this.add.image(400, 300, 'star')
         this.scoreLabel = this.createScoreLabel(16, 16, 0)
-        if(this.oldScore !== undefined)
         this.scoreLabel.setScore(this.oldScore);
-
         const platforms=this.createPlatforms()
 
         this.player=this.createPlayer()
@@ -82,31 +79,23 @@ export default class GameScene extends Phaser.Scene{
         if (this.gameOver)
 		{
             var keyObj = this.input.keyboard.addKey('R');  
-          
+
 			if (keyObj.isDown)
             {
                 window.location.reload();
             }
 		}
-        // if(this.oldScore>)
         if(this.scoreLabel.score > this.oldScore)
         {
             levChange=this.newChange
             if(this.scoreLabel.score > levChange)
-            {
-                levChange=levChange+ this.scoreLabel.score*0.75;
-                this.scene.start(AllScenes[Math.floor((Math.random() * 4) + 0)],{score: this.scoreLabel.score, change:levChange})
-            }
-        }
-        if(this.oldScore === undefined)
         {
-            if(this.scoreLabel.score > levChange)
-            {
-                levChange=levChange+ this.scoreLabel.score*0.75;
-                this.scene.start(AllScenes[Math.floor((Math.random() * 4) + 0)],{score: this.scoreLabel.score, change:levChange})
-            }
+            levChange=levChange+ this.scoreLabel.score*0.75;
+            this.scene.start(AllScenes[Math.floor((Math.random() * 4) + 0)],{score: this.scoreLabel.score, change:levChange})
         }
-       
+        }
+
+        
 
 
 
@@ -143,10 +132,13 @@ export default class GameScene extends Phaser.Scene{
 
         platforms.create(400,568,GROUND_KEY).setScale(2).refreshBody()
 
-        platforms.create(400,400,GROUND_KEY)
-        platforms.create(50,250,GROUND_KEY)
-        platforms.create(750,220,GROUND_KEY)
-
+            platforms.create(400,150,GROUND_KEY)
+            platforms.create(120,400,GROUND_KEY)
+            platforms.create(680,400,GROUND_KEY)
+            platforms.create(-50,250,GROUND_KEY)
+            platforms.create(850,250,GROUND_KEY)
+            // platforms.create(350,100,GROUND_KEY)
+        
 
         return platforms
     }
@@ -220,7 +212,7 @@ export default class GameScene extends Phaser.Scene{
 		player.setTint(0xff0000)
 
 		player.anims.play('turn')
-        this.finalScore=new HighScore(this,40,40,this.scoreLabel.score, {fontSize:'40px',fill:'#fff'})
+        this.finalScore=new HighScore (this,40,40,this.scoreLabel.score, {fontSize:'40px',fill:'#fff'})
         this.add.existing(this.finalScore)
 		this.gameOver = true
 	}
